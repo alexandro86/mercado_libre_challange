@@ -26,8 +26,7 @@ function getProducts(options) {
             .on("end", () => {
                 let bufferArray = Buffer.concat(chunks);
                 let schema = JSON.parse(bufferArray);
-                results = schema.available_filters;
-                myEmitter.emit('prod', results)
+                myEmitter.emit('prod', schema)
             })
     });
     
