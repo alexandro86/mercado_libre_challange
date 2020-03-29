@@ -35,6 +35,5 @@ function getProducts(options) {
 module.exports = {
     options,
     getProducts,
-    final, 
     myEmitter
 }
