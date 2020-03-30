@@ -4,11 +4,11 @@ const cors = require('cors')
 
 
 const { options, getProducts, myEmitter } = require("../sources/index");
-
+///items?search=xxx
 /* GET home page. */
-router.get("/", cors(), function(req, res, next) {
+router.get("/items", cors(), function(req, res, next) {
+  getProducts(req.originalUrl)
   myEmitter.on('prod', data => res.send(data))
-  getProducts(options)
 });
 
 // router.get("/products", function(req, res, next) {
