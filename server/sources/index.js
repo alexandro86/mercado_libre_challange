@@ -1,10 +1,9 @@
-const EventEmitter = require("events");
+const axios = require("axios").default;
 
-class MyEmitter extends EventEmitter {}
-const myEmitter = new MyEmitter();
-const https = require("https");
+
 const base = "https://api.mercadolibre.com/sites/MLA/search?q=";
 const sort = "&sort=sortId&limit=4";
+
 
 ///items?search=xxx
 //https://api.mercadolibre.com/sites/MLA/search?q=LaptopAsus&sort=sortName&limit=4
@@ -12,29 +11,10 @@ const sort = "&sort=sortId&limit=4";
  * Return a result of query all items over api
  * @param {options} of request, it could be an url or an object
  */
-function getProducts(clientUrl) {
-  let chunks = [];
-  const req = https.request(
-    BuildUrl(base, CreateFilter(clientUrl), sort),
-    res => {
-      res
-        .on("data", data => {
-          chunks.push(data);
-        })
-        .on("end", () => {
-          let bufferArray = Buffer.concat(chunks);
-          let schema = JSON.parse(bufferArray);
-          let result = GetResult(schema);
-          console.log("resultado: ", result);
-          myEmitter.emit("prod", result);
-        });
-    }
-  );
-
-  req.on("error", e => {
-    console.error(e);
-  });
-  req.end();
+async function getProducts(clientUrl) {
+  const buffer = await (await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))).data;
+  const result = GetResult(buffer);
+  return result;
 }
 
 function CreateFilter(str) {
@@ -52,7 +32,7 @@ function BuildUrl(base, filter, sort) {
 function GetResult(schema) {
   const result = {
     categories: [],
-    item: []
+    items: []
   };
 
   const {
@@ -88,12 +68,11 @@ function GetResult(schema) {
       condition,
       picture: thumbnail
     };
-    result.item.push(element);
+    result.items.push(element);
   }
   return result;
 }
 
 module.exports = {
   getProducts,
-  myEmitter
 };
