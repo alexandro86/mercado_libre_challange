@@ -1,9 +1,8 @@
 const axios = require("axios").default;
-
+const _ = require("lodash");
 
 const base = "https://api.mercadolibre.com/sites/MLA/search?q=";
 const sort = "&sort=sortId&limit=4";
-
 
 ///items?search=xxx
 //https://api.mercadolibre.com/sites/MLA/search?q=LaptopAsus&sort=sortName&limit=4
@@ -12,7 +11,9 @@ const sort = "&sort=sortId&limit=4";
  * @param {options} of request, it could be an url or an object
  */
 async function getProducts(clientUrl) {
-  const data = await (await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))).data;
+  const data = await (
+    await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))
+  ).data;
   const result = GetResult(data);
   return result;
 }
@@ -25,7 +26,6 @@ function CreateFilter(str) {
 
 function BuildUrl(base, filter, sort) {
   let result = String(base) + String(filter) + String(sort);
-  console.log("Result:", result);
   return result;
 }
 
@@ -35,16 +35,22 @@ function GetResult(schema) {
     items: []
   };
 
-  const {
-    available_filters: { values }
-  } = schema;
-  console.log("Values: ", values);
-  const myValues = Array.from(values);
-  for (const value of myValues) {
-    const { name } = value;
-    result.categories.push(name);
+  const { available_filters } = schema;
+  const temp = [];
+  for (const value of available_filters) {
+    temp.push(value.values);
   }
-
+  const temp1 = _.flatten(temp);
+  const ordered = temp1.sort((a, b) => {
+    if (a.results > b.results) {
+      return -1;
+    }
+    if (a.results < b.results) {
+      return 1;
+    }
+    return 0;
+  });
+  result.categories = ordered.map(item => item.name);
   const { results } = schema;
   for (const item of results) {
     const {
@@ -74,5 +80,5 @@ function GetResult(schema) {
 }
 
 module.exports = {
-  getProducts,
+  getProducts
 };
