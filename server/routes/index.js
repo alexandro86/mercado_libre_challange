@@ -13,7 +13,7 @@ router.get("/items", cors(), async function(req, res, next) {
 
 router.get("/products/:id", cors(), async function(req, res, next) {
   console.log("param", req.params.id)
-  const data = await getProduct("MLA824302062")
+  const data = await getProduct(req.params.id)
   res.send(data)
 });
 
