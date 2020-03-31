@@ -1,14 +1,12 @@
 const axios = require("axios").default;
-const _ = require("lodash");
+const { GetCategories } = require("./common");
 
 const base = "https://api.mercadolibre.com/sites/MLA/search?q=";
 const sort = "&sort=sortId&limit=4";
 
-///items?search=xxx
-//https://api.mercadolibre.com/sites/MLA/search?q=LaptopAsus&sort=sortName&limit=4
 /**
  * Return a result of query all items over api
- * @param {options} of request, it could be an url or an object
+ * @param {url} clientUrl request, it could be an url or an object
  */
 async function getProducts(clientUrl) {
   const data = await (
@@ -18,40 +16,42 @@ async function getProducts(clientUrl) {
   return result;
 }
 
+/**
+ * this method isolate the string which become in filter for url params
+ * @param {string} str
+ * @returns a filter
+ */
 function CreateFilter(str) {
   const filter = String(str).split("=");
   if (filter.length < 2) return null;
   return filter[1];
 }
 
+/**
+ * This method build a url fiting tree parts of it
+ * @param {string} base url base not change
+ * @param {string} filter is a parameter to find something
+ * @param {string} sort is a url parameter to sort the search
+ */
 function BuildUrl(base, filter, sort) {
   let result = String(base) + String(filter) + String(sort);
   return result;
 }
 
-function GetResult(schema) {
+/**
+ * This method normalize the data in readable data for frontend
+ * @param {object} data input data which coming from ml server
+ */
+function GetResult(data) {
   const result = {
     categories: [],
     items: []
   };
+  // got categories
+  result.categories = GetCategories(data);
 
-  const { available_filters } = schema;
-  const temp = [];
-  for (const value of available_filters) {
-    temp.push(value.values);
-  }
-  const temp1 = _.flatten(temp);
-  const ordered = temp1.sort((a, b) => {
-    if (a.results > b.results) {
-      return -1;
-    }
-    if (a.results < b.results) {
-      return 1;
-    }
-    return 0;
-  });
-  result.categories = ordered.map(item => item.name);
-  const { results } = schema;
+  const { results } = data;
+  // got items
   for (const item of results) {
     const {
       id,
