@@ -11,7 +11,7 @@ router.get("/items", cors(), async function(req, res, next) {
   res.send(data)
 });
 
-router.get("/products/:id", cors(), async function(req, res, next) {
+router.get("/items/:id", cors(), async function(req, res, next) {
   console.log("param", req.params.id)
   const data = await getProduct(req.params.id)
   res.send(data)
