@@ -19,6 +19,12 @@ function GetCategories(schema) {
   return orderedCollection.map(item => item.name);
 }
 
+const author = {
+  name: "Alejandro",
+  lastname: "Gonzalez"
+}
+
 module.exports = {
-    GetCategories
+    GetCategories,
+    author
 }

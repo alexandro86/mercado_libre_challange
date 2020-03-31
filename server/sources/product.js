@@ -1,5 +1,5 @@
 const axios = require("axios").default;
-
+const { author } = require("./common")
 const base = "https://api.mercadolibre.com/items";
 
 /**
@@ -31,6 +31,7 @@ function getResult(data, description) {
     category_id
   } = data;
   const result = {
+    author,
     categories: [],
     item: {
       id,

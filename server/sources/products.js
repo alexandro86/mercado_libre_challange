@@ -1,5 +1,5 @@
 const axios = require("axios").default;
-const { GetCategories } = require("./common");
+const { GetCategories, author } = require("./common");
 
 const base = "https://api.mercadolibre.com/sites/MLA/search?q=";
 const sort = "&sort=sortId&limit=4";
@@ -43,7 +43,7 @@ function BuildUrl(base, filter, sort) {
  * @param {object} data input data which coming from ml server
  */
 function GetResult(data) {
-  const result = {
+  let result = {
     categories: [],
     items: []
   };
@@ -76,6 +76,7 @@ function GetResult(data) {
     };
     result.items.push(element);
   }
+  result = { author, ...result };
   return result;
 }
 
