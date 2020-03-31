@@ -12,8 +12,8 @@ const sort = "&sort=sortId&limit=4";
  * @param {options} of request, it could be an url or an object
  */
 async function getProducts(clientUrl) {
-  const buffer = await (await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))).data;
-  const result = GetResult(buffer);
+  const data = await (await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))).data;
+  const result = GetResult(data);
   return result;
 }
 
