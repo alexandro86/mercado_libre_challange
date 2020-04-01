@@ -3,10 +3,15 @@ Proyecto challange busqueda mercado libre
 
 #Instrucciones
 ## Descargar proyecto
-"git clone https://github.com/alexandro86/mercado_libre_challange.git"
+$ git clone https://github.com/alexandro86/mercado_libre_challange.git
 
-cd client
-yarn start
+Desde la raíz del proyecto
+$ cd mercado_libre_challange
+$ cd client
+$ npm i
+$ yarn start
 
-cd server
-npm run start
+Desde la raíz del proyecto
+$ cd server
+$ npm i
+$ npm run start
