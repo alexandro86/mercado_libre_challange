@@ -1,23 +1,54 @@
 const axios = require("axios").default;
-const { author } = require("./common")
+const { author } = require("./common");
 const base = "https://api.mercadolibre.com/items";
-
+const baseCategory = "https://api.mercadolibre.com/categories";
 /**
- * Return a result of query all items over api
+ * Get inicial data of the resource
  * @param {string} id for requested resource
  */
-async function getProduct(id) {
-  const data = await (await axios.get(`${base}/${id}`)).data;
-  const description = await (await axios.get(`${base}/${id}/description`)).data
-    .plain_text;
-  const result = getResult(data, description);
-  return result;
+async function getData(id) {
+  let data;
+  try {
+    data = await (await axios.get(`${base}/${id}`)).data;
+  } catch (error) {
+    console.log(error);
+  }
+  return data;
 }
- /**
-  * Build the response object resultant
-  * @param {object} data 
-  * @param {string} description 
-  */
+
+/**
+ * Get the description of the resource
+ * @param {string} id 
+ */
+async function getDescription(id) {
+  let description;
+  try {
+    description = await (await axios.get(`${base}/${id}/description`)).data
+      .plain_text;
+  } catch (error) {
+    console.log(error);
+  }
+  return description;
+}
+
+/**
+ * Get category of the resource
+ * @param {string} id 
+ */
+async function getCategory(id) {
+  let category;
+  try {
+    category = await (await axios.get(`${baseCategory}/${id}`)).data.name;
+  } catch (error) {
+    console.log(error);
+  }
+  return category;
+}
+/**
+ * Build the response object resultant
+ * @param {object} data
+ * @param {string} description
+ */
 function getResult(data, description) {
   const {
     id,
@@ -32,7 +63,7 @@ function getResult(data, description) {
   } = data;
   const result = {
     author,
-    categories: [],
+    category_id,
     item: {
       id,
       title,
@@ -48,7 +79,17 @@ function getResult(data, description) {
       description
     }
   };
-  result.categories.push(category_id)
+  return result;
+}
+
+/**
+ * Id of the query resource
+ * @param {string} id 
+ */
+async function getProduct(id) {
+  const result = getResult(await getData(id), await getDescription(id));
+  const category = await getCategory(result.category_id);
+  result["category"] = category;
   return result;
 }
 

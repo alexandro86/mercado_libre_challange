@@ -9,9 +9,14 @@ const sort = "&sort=sortId&limit=4";
  * @param {url} clientUrl request, it could be an url or an object
  */
 async function getProducts(clientUrl) {
-  const data = await (
-    await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))
-  ).data;
+  let data
+  try {
+    data = await (
+      await axios.get(BuildUrl(base, CreateFilter(clientUrl), sort))
+    ).data;
+  } catch (error) {
+    console.log(error)
+  }
   const result = GetResult(data);
   return result;
 }
