@@ -22,9 +22,9 @@ function GetCategories(schema) {
 const author = {
   name: "Alejandro",
   lastname: "Gonzalez"
-}
+};
 
 module.exports = {
-    GetCategories,
-    author
-}
+  GetCategories,
+  author
+};

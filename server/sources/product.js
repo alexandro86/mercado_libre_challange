@@ -18,7 +18,7 @@ async function getData(id) {
 
 /**
  * Get the description of the resource
- * @param {string} id 
+ * @param {string} id
  */
 async function getDescription(id) {
   let description;
@@ -33,7 +33,7 @@ async function getDescription(id) {
 
 /**
  * Get category of the resource
- * @param {string} id 
+ * @param {string} id
  */
 async function getCategory(id) {
   let category;
@@ -84,7 +84,7 @@ function getResult(data, description) {
 
 /**
  * Id of the query resource
- * @param {string} id 
+ * @param {string} id
  */
 async function getProduct(id) {
   const result = getResult(await getData(id), await getDescription(id));
